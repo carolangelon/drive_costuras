@@ -1,0 +1,450 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Drive Costuras</title>
+
+<style>
+body {
+  margin: 0;
+  font-family: Arial;
+  background: #f8f5ff;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+}
+
+.container {
+  width: 100%;
+  max-width: 400px;
+  background: white;
+  border-radius: 20px;
+  padding: 25px;
+  text-align: center;
+  box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+}
+
+.screen { display: none; }
+.active { display: block; }
+
+button {
+  width: 100%;
+  padding: 14px;
+  border-radius: 12px;
+  border: none;
+  background: linear-gradient(135deg, #9d4edd, #7b2cbf);
+  color: white;
+  margin-top: 10px;
+  cursor: pointer;
+}
+
+input {
+  width: 100%;
+  padding: 12px;
+  margin-top: 10px;
+  border-radius: 10px;
+  border: 1px solid #ddd;
+}
+
+.erro {
+  border: 2px solid #ff4d4d !important;
+}
+
+#carro {
+  width: 120px;
+  position: relative;
+  left: -250px;
+}
+
+.entrar { animation: entrar 1s forwards; }
+.saindo { animation: sair 0.7s forwards; }
+
+@keyframes entrar {
+  from { left: -250px; }
+  to { left: 0; }
+}
+
+@keyframes sair {
+  from { left: 0; }
+  to { left: 350px; opacity: 0; }
+}
+
+.card {
+  padding: 12px;
+  border-radius: 10px;
+  margin-top: 10px;
+  background: #f4efff;
+  cursor: pointer;
+}
+
+.card.selected {
+  background: #e6dbff;
+  transform: scale(0.97);
+}
+
+#miniTotal {
+  position: fixed;
+  bottom: 12px;
+  left: 50%;
+  transform: translateX(-50%);
+  background: #7b2cbf;
+  color: white;
+  padding: 8px 16px;
+  border-radius: 20px;
+  display: none;
+}
+
+.titulo-peca {
+  text-align: left;
+  font-weight: bold;
+  margin-top: 10px;
+  margin-bottom: 6px;
+}
+
+.linha-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 6px;
+}
+
+.btn-remover {
+  background: linear-gradient(135deg, #9d4edd, #7b2cbf);
+  color: white;
+  border: none;
+  border-radius: 50%;
+  width: 24px;
+  height: 24px;
+  font-size: 13px;
+  cursor: pointer;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  transition: all 0.2s ease;
+}
+
+.btn-remover {
+  background: linear-gradient(135deg, #9d4edd, #7b2cbf);
+  color: white;
+  border: none;
+  border-radius: 50%;
+
+  width: 24px;
+  height: 24px;
+
+  font-size: 13px;
+  cursor: pointer;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.btn-remover:hover {
+  transform: scale(1.1);
+}
+
+.btn-remover:active {
+  transform: scale(0.9);
+}
+</style>
+</head>
+
+<body>
+
+<div class="container">
+
+<!-- HOME -->
+<div id="home" class="screen active">
+  <img id="carro" src="img/carro.png">
+  <h2>Drive Costuras</h2>
+  <button id="btnStart">Solicitar serviço</button>
+</div>
+
+<!-- ENDEREÇO -->
+<div id="endereco" class="screen">
+  <h3>Seus dados</h3>
+  <input id="nome" placeholder="Seu nome">
+  <input id="telefone" placeholder="Telefone">
+  <input id="bairro" placeholder="Bairro (opcional)">
+  
+  <button id="btnLocalizacao">📍 Usar minha localização</button>
+  <p id="distanciaInfo"></p>
+
+  <button id="btnValidar">Continuar</button>
+</div>
+
+<!-- PEÇA -->
+<div id="peca" class="screen">
+  <h3>Escolha a peça</h3>
+  <div class="card" data-peca="Camiseta">👕 Camiseta</div>
+  <div class="card" data-peca="Calça">👖 Calça Jeans</div>
+  <div class="card" data-peca="Calça">👖 Calça Social</div>
+  <div class="card" data-peca="Vestido">👗 Vestido</div>
+  <div class="card" data-peca="Camisa">👔 Camisa</div>
+  <div class="card" data-peca="Saia">👗 Saia</div>
+  <div class="card" data-peca="Shorts">🩳 Shorts</div>				
+</div>
+
+<!-- SERVIÇOS -->
+<div id="servicos" class="screen">
+  <h3>Serviços</h3>
+  <div class="card" data-servico="Barra original" data-valor="45">Barra Original - R$45</div>
+  <div class="card" data-servico="Barra italiana" data-valor="55">Barra Italiana - R$55</div>
+  <div class="card" data-servico="Barra normal" data-valor="35">Barra Normal - R$35</div>
+  <div class="card" data-servico="Troca de zíper" data-valor="30">Troca de Zíper - R$30</div>
+  <div class="card" data-servico="Apertar a fazer barra" data-valor="55">Apertar e fazer a barra - R525</div>
+  <div class="card" data-servico="Ajuste mínimo" data-valor="15">Ajuste mínimo - R$15</div>
+  <div class="card" data-servico="Ajuste de manga" data-valor="40">Ajuste de Manga - R$40</div>
+  <div class="card" data-servico="Pregar botão" data-valor="8">Pregar Botão - R$8</div>
+
+  <button id="btnOutra">+ Outra peça</button>
+  <button id="btnResumo">Ver pedido</button>
+</div>
+
+<!-- RESUMO -->
+<div id="resumo" class="screen">
+  <h3>Resumo</h3>
+  <div id="resumoFinal"></div>
+  <p>Frete: R$<span id="freteFinal">0</span></p>
+  <p>Total: R$<span id="totalFinal">0</span></p>
+  <button id="btnVoltar">Voltar</button>
+  <button id="btnEnviar">Confirmar</button>
+  <button id="btnReset">Novo pedido</button>
+</div>
+
+</div>
+
+<div id="miniTotal">🛍️ R$<span id="miniValor">0</span></div>
+
+<script>
+
+let pedido = [];
+let pecaAtual = "";
+let servicosAtuais = [];
+let total = 0;
+
+let frete = 0;
+let distanciaCalculada = null;
+
+// COORDENADA (trocar depois)
+const loja = {
+  lat: -23.56545,
+  lng: -46.54857
+};
+
+// ANIMAÇÃO
+window.addEventListener("load", () => {
+  document.getElementById("carro").classList.add("entrar");
+});
+
+// NAVEGAÇÃO
+function trocarTela(id){
+  document.querySelectorAll(".screen").forEach(s => s.classList.remove("active"));
+  document.getElementById(id).classList.add("active");
+}
+
+// INÍCIO
+document.getElementById("btnStart").onclick = () => {
+  document.getElementById("carro").classList.add("saindo");
+  setTimeout(()=>trocarTela("endereco"),700);
+};
+
+// DISTÂNCIA
+function calcularDistancia(lat1, lon1, lat2, lon2){
+  const R = 6371;
+  const dLat = (lat2-lat1)*Math.PI/180;
+  const dLon = (lon2-lon1)*Math.PI/180;
+
+  const a =
+    Math.sin(dLat/2)**2 +
+    Math.cos(lat1*Math.PI/180) *
+    Math.cos(lat2*Math.PI/180) *
+    Math.sin(dLon/2)**2;
+
+  return R * (2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a)));
+}
+
+// FRETE
+function calcularFrete(d){
+  if(d <= 5) return 10;
+  if(d <= 10) return 15;
+  if(d <= 16) return 20;
+  if(d <= 20) return 25;
+  return null;
+}
+
+// LOCALIZAÇÃO
+document.getElementById("btnLocalizacao").onclick = () => {
+
+  navigator.geolocation.getCurrentPosition((pos)=>{
+
+    const d = calcularDistancia(
+      pos.coords.latitude,
+      pos.coords.longitude,
+      loja.lat,
+      loja.lng
+    );
+
+    const taxa = calcularFrete(d);
+
+    distanciaCalculada = d;
+
+    if(taxa === null){
+      document.getElementById("distanciaInfo").innerText =
+        `❌ Fora da área (${d.toFixed(1)} km)`;
+      return;
+    }
+
+    frete = taxa;
+
+    document.getElementById("distanciaInfo").innerText =
+      `📍 ${d.toFixed(1)} km | Frete: R$${taxa}`;
+
+  }, ()=> alert("Erro ao obter localização"));
+};
+
+// VALIDAR
+document.getElementById("btnValidar").onclick = () => {
+
+  let nome = document.getElementById("nome");
+  let tel = document.getElementById("telefone");
+
+  [nome,tel].forEach(el=>el.classList.remove("erro"));
+
+  if(!nome.value.trim()){
+    nome.classList.add("erro"); return;
+  }
+
+  if(!tel.value.trim()){
+    tel.classList.add("erro"); return;
+  }
+
+  if(distanciaCalculada === null){
+  // modo teste
+  frete = 10;
+  distanciaCalculada = 3;
+
+  document.getElementById("distanciaInfo").innerText =
+    "🧪 Modo teste (frete simulado R$10)";
+}
+
+  trocarTela("peca");
+};
+
+// PEÇA
+document.querySelectorAll("[data-peca]").forEach(el=>{
+  el.onclick = ()=>{
+    pecaAtual = el.dataset.peca;
+    servicosAtuais = [];
+    trocarTela("servicos");
+  };
+});
+
+// SERVIÇO
+document.querySelectorAll("[data-servico]").forEach(el=>{
+  el.onclick = ()=>{
+    servicosAtuais.push({
+      nome: el.dataset.servico,
+      valor: Number(el.dataset.valor)
+    });
+    total += Number(el.dataset.valor);
+    atualizarMini();
+  };
+});
+
+// OUTRA PEÇA
+document.getElementById("btnOutra").onclick = ()=>{
+  if(servicosAtuais.length === 0) return;
+
+  pedido.push({ peca: pecaAtual, servicos:[...servicosAtuais] });
+  servicosAtuais = [];
+  trocarTela("peca");
+};
+
+// RESUMO
+document.getElementById("btnResumo").onclick = ()=>{
+
+  if(servicosAtuais.length > 0){
+    pedido.push({ peca: pecaAtual, servicos:[...servicosAtuais] });
+    servicosAtuais = [];
+  }
+
+  let html = "";
+
+  pedido.forEach((item,i)=>{
+   html += `<div class="titulo-peca">${item.peca}</div>`;;
+
+  item.servicos.forEach((s,j)=>{
+    html += `
+<div class="linha-item">
+  <span>${s.nome} - R$${s.valor}</span>
+  <button class="btn-remover" onclick="remover(${i},${j})">✕</button>
+</div>
+`;
+  });
+
+  html += "<br>";
+});
+
+  document.getElementById("resumoFinal").innerHTML = html;
+  document.getElementById("freteFinal").innerText = frete;
+  document.getElementById("totalFinal").innerText = total + frete;
+
+  trocarTela("resumo");
+
+};
+
+// MINI TOTAL
+function atualizarMini(){
+  let el = document.getElementById("miniTotal");
+
+  let totalComFrete = total + frete;
+
+  if(totalComFrete > 0){
+    el.style.display = "block";
+    document.getElementById("miniValor").innerText = totalComFrete;
+  } else {
+    el.style.display = "none";
+  }
+}
+
+// VOLTAR
+document.getElementById("btnVoltar").onclick = ()=>trocarTela("servicos");
+
+// RESET
+document.getElementById("btnReset").onclick = ()=>{
+  pedido=[]; total=0; frete=0;
+  atualizarMini();
+  trocarTela("home");
+};
+
+// WHATS
+document.getElementById("btnEnviar").onclick = ()=>{
+
+  let nome = document.getElementById("nome").value;
+  let tel = document.getElementById("telefone").value;
+
+  let msg = `Olá! 😊%0A👤 ${nome}%0A📞 ${tel}%0A`;
+
+  pedido.forEach(item=>{
+    msg += `%0A🧵 ${item.peca}%0A`;
+    item.servicos.forEach(s=>{
+      msg += `- ${s.nome} (R$${s.valor})%0A`;
+    });
+  });
+
+  msg += `%0A🚗 Frete: R$${frete}`;
+  msg += `%0A💰 Total: R$${total + frete}`;
+
+  window.open(`https://wa.me/5511973441285?text=${msg}`);
+};
+
+</script>
+
+</body>
+</html>
