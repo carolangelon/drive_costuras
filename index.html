@@ -30,9 +30,7 @@ body {
 .active { display: block; }
 
 button {
-  input {
-  width: calc(100% - 24px);
-  box-sizing: border-box;
+  width: 100%;
   padding: 14px;
   border-radius: 12px;
   border: none;
@@ -43,7 +41,8 @@ button {
 }
 
 input {
-  width: 100%;
+  width: calc(100% - 24px);
+  box-sizing: border-box;
   padding: 12px;
   margin-top: 10px;
   border-radius: 10px;
@@ -55,9 +54,8 @@ input {
 }
 
 #carro {
-  width: 120px;
+  width: 180px;
   position: relative;
-  left: -250px;
 }
 
 .entrar { animation: entrar 1s forwards; }
