@@ -151,6 +151,12 @@ input {
 .btn-remover:active {
   transform: scale(0.9);
 }
+
+button:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+  
 </style>
 </head>
 
@@ -175,7 +181,7 @@ input {
   <button id="btnLocalizacao">📍 Usar minha localização</button>
   <p id="distanciaInfo"></p>
 
-  <button id="btnValidar">Continuar</button>
+  <button id="btnValidar" disabled>Continuar</button>
 </div>
 
 <!-- PEÇA -->
@@ -295,13 +301,19 @@ document.getElementById("btnLocalizacao").onclick = () => {
     distanciaCalculada = d;
 
     if(taxa === null){
-      document.getElementById("distanciaInfo").innerText =
-        `❌ Fora da área (${d.toFixed(1)} km)`;
-      return;
+
+  document.getElementById("distanciaInfo").innerText =
+    `❌ Fora da área (${d.toFixed(1)} km)`;
+
+  document.getElementById("btnValidar").disabled = true;
+
+  return;
     }
 
     frete = taxa;
 
+    document.getElementById("btnValidar").disabled = false;
+    
     document.getElementById("distanciaInfo").innerText =
       `📍 ${d.toFixed(1)} km | Frete: R$${taxa}`;
 
