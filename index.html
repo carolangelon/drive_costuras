@@ -456,6 +456,47 @@ document.getElementById("btnEnviar").onclick = ()=>{
   window.open(`https://wa.me/5511973441285?text=${msg}`);
 };
 
+  function remover(i, j){
+
+  total -= pedido[i].servicos[j].valor;
+
+  pedido[i].servicos.splice(j,1);
+
+  // remove peça vazia
+  if(pedido[i].servicos.length === 0){
+    pedido.splice(i,1);
+  }
+
+  atualizarMini();
+
+  // recria resumo
+  let html = "";
+
+  pedido.forEach((item,i)=>{
+
+    html += `<div class="titulo-peca">${item.peca}</div>`;
+
+    item.servicos.forEach((s,j)=>{
+
+      html += `
+      <div class="linha-item">
+        <span>${s.nome} - R$${s.valor}</span>
+        <button class="btn-remover" onclick="remover(${i},${j})">✕</button>
+      </div>
+      `;
+
+    });
+
+    html += "<br>";
+
+  });
+
+  document.getElementById("resumoFinal").innerHTML = html;
+
+  document.getElementById("totalFinal").innerText =
+    total + frete;
+}
+
 </script>
 
 </body>
